@@ -3,25 +3,17 @@
     Vue.js Calculator
   </header>
   <body>
-   <div class="border-2 border-green-400 grid grid-rows-5 grid-cols-4 h-80 sm:mx-52 bg-green-200">
-    <div class="col-start-1 col-end-5 text-center mt-3 font-bold text-lg">{{ value || '0' }}</div>
+   <div class="border-2 border-green-400 grid grid-rows-4 grid-cols-4 sm:mx-52 bg-green-200">
+    <div class="col-start-1 col-end-5 text-center mt-3 font-bold text-lg py-4">{{ value || '0' }}</div>
 
-      <input type="button" class="hover:bg-green-600 font-bold text-lg" value="7" @click="display('7')">
-      <input type="button" class="hover:bg-green-600 font-bold text-lg" @click="display(8)" value="8">
-      <input type="button" class="hover:bg-green-600 font-bold text-lg" @click="display(9)" value="9">
-      <input type="button" class="hover:bg-green-600 font-bold text-lg" value="x">
-      <input type="button" class="hover:bg-green-600 font-bold text-lg" @click="display(4)" value="4">
-      <input type="button" class="hover:bg-green-600 font-bold text-lg" @click="display(5)" value="5">
-      <input type="button" class="hover:bg-green-600 font-bold text-lg" @click="display(6)" value="6">
-      <input type="button" class="hover:bg-green-600 font-bold text-lg" value="÷">
-      <input type="button" class="hover:bg-green-600 font-bold text-lg" @click="display(1)" value="1">
-      <input type="button" class="hover:bg-green-600 font-bold text-lg" @click="display(2)" value="2">
-      <input type="button" class="hover:bg-green-600 font-bold text-lg" @click="display(3)" value="3">
-      <input type="button" class="hover:bg-green-600 font-bold text-lg" @click="plus" value="+">
-      <input type="button" class="hover:bg-green-600 font-bold text-lg" value="C" @click="clear()">
-      <input type="button" class="hover:bg-green-600 font-bold text-lg" @click="display(0)" value="0">
-      <input type="button" class="hover:bg-green-600 font-bold text-lg" value="=">
-      <input type="button" class="hover:bg-green-600 font-bold text-lg" value="-">
+    <div v-for="n in calculatorElements" :key="n" class="rounded hover:bg-green-600 py-4 m-1"
+    :class="{'bg-green-300': ['C', '*', '/', '-', '%', '+', '='].includes(n)}"
+    @click="action(n)">
+      <div class="font-bold text-lg text-center">
+       {{ n }}       
+      </div>
+
+    </div>
    </div> 
   </body>
 </template>
@@ -32,15 +24,40 @@ export default {
   data() {
     return {
          value: '',
+         calculatorElements: ['C', '*', '/', '-', 7, 8, 9, '%', 4, 5, 6, '+', 3, 2, 1, '=', 0, '.'],
+         operator: null,
+         previousValue: ''
     }
   },
   methods: {
-    display(value) {
-      return this.value = value;
+    action(n) {
+      if(!isNaN(n) || n === '.') {
+        this.value += n + '';
+      }
+
+      if(n === 'C') {
+        this.value = '';
+      }
+
+      if(n === '%') {
+        this.value = this.value / 100 + '';
+      }
+
+      if(['*', '/', '-', '+'].includes(n)) {
+        this.operator = n;
+        this.previousValue = this.value;
+        this.value = '';
+      }
+
+      if(n === '=') {
+        this.value = eval(
+          this.previousValue+ this.operator + this.value
+        );
+
+        this.previousValue = '';
+        this.operator = null;
+      }
     },
-    clear() {
-      return this.value = '';
-    }
   }
 } 
 </script>
