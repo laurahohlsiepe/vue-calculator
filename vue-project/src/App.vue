@@ -3,7 +3,7 @@
     Vue.js Calculator
   </header>
   <body>
-   <div class="border-2 border-green-400 grid grid-rows-4 grid-cols-4 sm:mx-52 bg-green-200">
+   <div class="border-2 border-green-400 grid grid-rows-4 grid-cols-4 sm:mx-32 bg-green-200">
     <div class="col-start-1 col-end-5 text-center mt-3 font-bold text-lg py-4">{{ value || '0' }}</div>
 
     <div v-for="n in calculatorElements" :key="n" class="rounded hover:bg-green-600 py-4 m-1"
@@ -51,7 +51,7 @@ export default {
 
       if(n === '=') {
         this.value = eval(
-          this.previousValue+ this.operator + this.value
+          this.previousValue + this.operator + this.value
         );
 
         this.previousValue = '';
